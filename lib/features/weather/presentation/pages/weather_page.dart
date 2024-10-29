@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_meteo_weather_app/features/weather/presentation/manager/fetch_country_lat_lng_bloc.dart';
 import 'package:open_meteo_weather_app/features/weather/presentation/widgets/weather_country_lat_lng_list_item.dart';
 import 'package:open_meteo_weather_app/utils/constant/app_constant.dart';
+import 'package:open_meteo_weather_app/utils/constant/app_snackbar.dart';
 import 'package:open_meteo_weather_app/utils/dependency_injection/di_container.dart';
 import 'package:open_meteo_weather_app/utils/navigation/app_navigations.dart';
 import 'package:open_meteo_weather_app/widget/error/app_error.dart';
@@ -110,8 +111,13 @@ class _WeatherPageState extends State<WeatherPage> {
                   value: fetchCountryLatLngBloc,
                   child: BlocConsumer<FetchCountryLatLngBloc,
                       FetchCountryLatLngState>(
-                    listener: (context, state) {
-                      if (state is FetchCountryLatLngFailure) {}
+                    listener: (ctx, state) {
+                      if (state is FetchCountryLatLngFailure) {
+                        AppSnackBar().showErrorSnackBar(
+                          context: ctx,
+                          error: state.errorMessage,
+                        );
+                      }
                     },
                     builder: (context, state) {
                       if (state is FetchCountryLatLngLoading) {
@@ -123,14 +129,18 @@ class _WeatherPageState extends State<WeatherPage> {
                           errorMessage: state.errorMessage,
                         );
                       }
-                      return ListView.separated(
-                        itemBuilder: (BuildContext ctx, int index) =>
-                            WeatherCountryLatLngListItem(
-                          countryLatLngResponseEntity: state.items[index],
-                        ),
-                        separatorBuilder: (_, __) => const Divider(),
-                        itemCount: state.items.length,
-                      ).animate().fade(delay: 500.ms);
+                      return state.items.isEmpty
+                          ? const AppError(
+                        errorMessage: 'No Location Found',
+                      )
+                          : ListView.separated(
+                              itemBuilder: (BuildContext ctx, int index) =>
+                                  WeatherCountryLatLngListItem(
+                                countryLatLngResponseEntity: state.items[index],
+                              ),
+                              separatorBuilder: (_, __) => const Divider(),
+                              itemCount: state.items.length,
+                            ).animate().fade(delay: 500.ms);
                     },
                   ),
                 ),

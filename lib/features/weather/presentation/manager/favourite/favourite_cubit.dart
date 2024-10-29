@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:open_meteo_weather_app/utils/local_storage/app_local_storage.dart';
@@ -21,16 +19,15 @@ class FavouriteCubit extends Cubit<FavouriteState> {
     emit(const FavouriteLoading(getFavourites: []));
     final items = appLocalStorage.getFavouriteData();
 
-
     items
         .map(
           (e) => favourites.add(
             {
-              'latitude': e['latitude'],
-              'longitude': e['longitude'],
-              'countryName': e['countryName'],
-              'cityName': e['cityName'],
-              'weatherId': e['weatherId'],
+              'latitude': e['latitude'].toString(),
+              'longitude': e['longitude'].toString(),
+              'countryName': e['countryName'].toString(),
+              'cityName': e['cityName'].toString(),
+              'weatherId': e['weatherId'].toString(),
             },
           ),
         )
@@ -43,7 +40,12 @@ class FavouriteCubit extends Cubit<FavouriteState> {
 
   void insertAsFavouriteIntoLocalStorage({required Map<String, dynamic> item}) {
     emit(FavouriteLoading(getFavourites: state.getFavourites));
-    if (!state.getFavourites.contains(item)) {
+    var items = state.getFavourites.firstWhere(
+      (dt) => dt['weatherId'] == item['weatherId'],
+      orElse: () => {},
+    );
+
+    if (items.isEmpty) {
       favourites.add(item);
       appLocalStorage.markAsFavourite(
         item: favourites,

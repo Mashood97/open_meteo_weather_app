@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:open_meteo_weather_app/features/weather/domain/entities/request/weather_detail_request_entity.dart';
 import 'package:open_meteo_weather_app/features/weather/presentation/manager/details/fetch_weather_details_bloc.dart';
-import 'package:open_meteo_weather_app/features/weather/presentation/pages/weather_page.dart';
+import 'package:open_meteo_weather_app/features/weather/presentation/manager/favourite/favourite_cubit.dart';
+import 'package:open_meteo_weather_app/features/weather/presentation/widgets/get_weather_forecast_card_item.dart';
 import 'package:open_meteo_weather_app/utils/constant/app_constant.dart';
 import 'package:open_meteo_weather_app/utils/constant/app_icons.dart';
+import 'package:open_meteo_weather_app/utils/constant/app_snackbar.dart';
 import 'package:open_meteo_weather_app/utils/dependency_injection/di_container.dart';
 import 'package:open_meteo_weather_app/utils/enum/weather_code_enum.dart';
 import 'package:open_meteo_weather_app/utils/extensions/context_extensions.dart';
 import 'package:open_meteo_weather_app/utils/extensions/string_extensions.dart';
 import 'package:open_meteo_weather_app/widget/error/app_error.dart';
 import 'package:open_meteo_weather_app/widget/loader/app_loader.dart';
-
-import '../manager/favourite/favourite_cubit.dart';
 
 class WeatherDetailsPage extends StatefulWidget {
   const WeatherDetailsPage({
@@ -84,11 +83,20 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
           BlocProvider.value(
             value: favouriteCubit,
             child: BlocListener<FavouriteCubit, FavouriteState>(
-              listener: (context, state) {
+              listener: (ctx, state) {
                 if (state is FavouriteSuccess &&
                     state.successMessage.isNotEmpty) {
                   //show success snackbar
-                  print('ITEM HAS BEEN ADDED');
+                  AppSnackBar().showSuccessSnackBar(
+                    context: ctx,
+                    successMsg: state.successMessage,
+                  );
+                }
+                if (state is FavouriteFailure) {
+                  AppSnackBar().showErrorSnackBar(
+                    context: ctx,
+                    error: state.errorMessage,
+                  );
                 }
               },
               child: isFromBookMark == 'true'
@@ -96,7 +104,13 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
                   : FloatingActionButton.small(
                       onPressed: () {
                         favouriteCubit.insertAsFavouriteIntoLocalStorage(
-                          item: widget.queryParams,
+                          item: {
+                            'latitude': latitude.toString(),
+                            'longitude': longitude.toString(),
+                            'countryName': countryName,
+                            'cityName': cityName,
+                            'weatherId': weatherId.toString(),
+                          },
                         );
                       },
                       tooltip: 'Add to bookmark',
@@ -174,22 +188,22 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
                           mainAxisSpacing: 10,
                           crossAxisSpacing: 10,
                           children: [
-                            GetTemperatureCardItem(
+                            GetWeatherForecastCardItem(
                               icon: AppIcons.temperatureIcon,
                               title:
                                   '${state.weatherForecastDetailsResponseEntity.weatherForecastCurrentDetails?.temperature} ${state.weatherForecastDetailsResponseEntity.weatherForecastCurrentUnits?.temperatureUnit}',
                             ),
-                            GetTemperatureCardItem(
+                            GetWeatherForecastCardItem(
                               icon: AppIcons.windIcon,
                               title:
                                   '${state.weatherForecastDetailsResponseEntity.weatherForecastCurrentDetails?.windSpeed} ${state.weatherForecastDetailsResponseEntity.weatherForecastCurrentUnits?.windSpeedUnit}',
                             ),
-                            GetTemperatureCardItem(
+                            GetWeatherForecastCardItem(
                               icon: AppIcons.humidityIcon,
                               title:
                                   '${state.weatherForecastDetailsResponseEntity.weatherForecastCurrentDetails?.humidity} ${state.weatherForecastDetailsResponseEntity.weatherForecastCurrentUnits?.humidityUnit}',
                             ),
-                            GetTemperatureCardItem(
+                            GetWeatherForecastCardItem(
                               icon: WeatherCode.getIconPath(
                                 state
                                         .weatherForecastDetailsResponseEntity
@@ -222,43 +236,5 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
         ),
       ),
     );
-  }
-}
-
-class GetTemperatureCardItem extends StatelessWidget {
-  const GetTemperatureCardItem({
-    required this.icon,
-    required this.title,
-    super.key,
-  });
-
-  final String icon;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            icon,
-            height: 50,
-            width: 50,
-            color: context.theme.colorScheme.primary,
-          ).animate().fade(delay: 800.ms),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: context.theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ).animate().fade(delay: 1000.ms),
-        ],
-      ),
-    ).animate().fade(delay: 400.ms);
   }
 }
