@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:open_meteo_weather_app/utils/theme/themes/app_theme.dart';
 
 class AppTextTheme {
@@ -50,40 +51,40 @@ class AppTextTheme {
     labelSmall: labelSmall.copyWith(color: AppTheme.lightColors.defaultText),
   );
 
-  static const TextStyle displayLarge =
-      TextStyle(fontSize: 57, fontWeight: FontWeight.w700);
-  static const TextStyle displayMedium =
-      TextStyle(fontSize: 45, fontWeight: FontWeight.w700);
-  static const TextStyle displaySmall =
-      TextStyle(fontSize: 36, fontWeight: FontWeight.w700);
+  static TextStyle displayLarge =
+      GoogleFonts.manrope(fontSize: 57, fontWeight: FontWeight.w700);
+  static TextStyle displayMedium =
+      GoogleFonts.manrope(fontSize: 45, fontWeight: FontWeight.w700);
+  static TextStyle displaySmall =
+      GoogleFonts.manrope(fontSize: 36, fontWeight: FontWeight.w700);
 
-  static const TextStyle headlineLarge =
-      TextStyle(fontSize: 32, fontWeight: FontWeight.w700);
-  static const TextStyle headlineMedium =
-      TextStyle(fontSize: 28, fontWeight: FontWeight.w700);
-  static const TextStyle headlineSmall =
-      TextStyle(fontSize: 24, fontWeight: FontWeight.w700);
+  static TextStyle headlineLarge =
+      GoogleFonts.manrope(fontSize: 32, fontWeight: FontWeight.w700);
+  static TextStyle headlineMedium =
+      GoogleFonts.manrope(fontSize: 28, fontWeight: FontWeight.w700);
+  static TextStyle headlineSmall =
+      GoogleFonts.manrope(fontSize: 24, fontWeight: FontWeight.w700);
 
-  static const TextStyle titleLarge =
-      TextStyle(fontSize: 22, fontWeight: FontWeight.w700);
-  static const TextStyle titleMedium =
-      TextStyle(fontSize: 18, fontWeight: FontWeight.w700);
-  static const TextStyle titleSmall =
-      TextStyle(fontSize: 14, fontWeight: FontWeight.w700);
+  static TextStyle titleLarge =
+      GoogleFonts.manrope(fontSize: 22, fontWeight: FontWeight.w700);
+  static TextStyle titleMedium =
+      GoogleFonts.manrope(fontSize: 18, fontWeight: FontWeight.w700);
+  static TextStyle titleSmall =
+      GoogleFonts.manrope(fontSize: 14, fontWeight: FontWeight.w700);
 
-  static const TextStyle bodyLarge =
-      TextStyle(fontSize: 16, fontWeight: FontWeight.w400);
-  static const TextStyle bodyMedium =
-      TextStyle(fontSize: 14, fontWeight: FontWeight.w400);
-  static const TextStyle bodySmall =
-      TextStyle(fontSize: 12, fontWeight: FontWeight.w400);
+  static TextStyle bodyLarge =
+      GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w400);
+  static TextStyle bodyMedium =
+      GoogleFonts.manrope(fontSize: 14, fontWeight: FontWeight.w400);
+  static TextStyle bodySmall =
+      GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w400);
 
-  static const TextStyle labelLarge =
-      TextStyle(fontSize: 14, fontWeight: FontWeight.w700);
-  static const TextStyle labelMedium =
-      TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
-  static const TextStyle labelSmall =
-      TextStyle(fontSize: 8, fontWeight: FontWeight.w700, letterSpacing: 0);
+  static TextStyle labelLarge =
+      GoogleFonts.manrope(fontSize: 14, fontWeight: FontWeight.w700);
+  static TextStyle labelMedium =
+      GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w600);
+  static TextStyle labelSmall = GoogleFonts.manrope(
+      fontSize: 8, fontWeight: FontWeight.w700, letterSpacing: 0);
 }
 
 extension AppTextThemeX on BuildContext {
